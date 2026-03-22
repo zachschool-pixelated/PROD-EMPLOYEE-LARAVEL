@@ -47,6 +47,7 @@
                     <th>Last Name</th>
                     <th>Job</th>
                     <th>Salary</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
@@ -58,6 +59,17 @@
                         <td>{{ $worker->lastname }}</td>
                         <td>{{ $worker->job }}</td>
                         <td>{{ $worker->salary }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="/employee/{{ $worker->id }}/edit" class="btn-edit">Edit</a>
+
+                                <form action="/employee/{{ $worker->id }}" method="POST" onsubmit="return confirm('Delete this employee?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </div>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

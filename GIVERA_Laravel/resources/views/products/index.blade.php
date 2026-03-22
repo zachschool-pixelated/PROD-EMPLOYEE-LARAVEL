@@ -34,6 +34,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Price</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
 
@@ -43,6 +44,17 @@
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->price }}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <a href="/products/{{ $item->id }}/edit" class="btn-edit">Edit</a>
+
+                                <form action="/products/{{ $item->id }}" method="POST" onsubmit="return confirm('Delete this product?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn-delete">Delete</button>
+                                </form>
+                            </div>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
