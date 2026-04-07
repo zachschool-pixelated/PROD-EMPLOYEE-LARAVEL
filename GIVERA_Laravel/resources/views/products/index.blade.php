@@ -11,20 +11,59 @@
 
     <div class="container">
         <h1>Products</h1>
-        <form action="/products123" method="POST" class="product-form">
-            @csrf
+        <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+            <a href="/categories" class="btn-edit">Manage Categories</a>
+        </div>
 
-            <div class="form-group">
-                <label for="name123">Name:</label>
-                <input type="text" id="name" name="name123">
+        @if (session('error'))
+            <div style="margin-bottom: 16px; color: #c0392b;">
+                {{ session('error') }}
             </div>
+        @endif
 
-            <div class="form-group">
-                <label for="price123">Price:</label>
-                <input type="text" id="price" name="price123">
+        @if ($errors->any())
+            <div style="margin-bottom: 16px; color: #c0392b;">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
-            <button type="submit" class="btn-submit">Save</button>
-        </form>
+        @endif
+
+        @if ($categories->isEmpty())
+            <div style="margin-bottom: 16px; color: #c0392b;">
+                You need at least one category before adding products.
+            </div>
+        @else
+            <form action="/products123" method="POST" class="product-form">
+                @csrf
+
+                <div class="form-group">
+                    <label for="name123">Name:</label>
+                    <input type="text" id="name123" name="name123" value="{{ old('name123') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="price123">Price:</label>
+                    <input type="text" id="price123" name="price123" value="{{ old('price123') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="category_id123">Category:</label>
+                    <select id="category_id123" name="category_id123">
+                        <option value="">-- Select Category --</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" @selected(old('category_id123') == $category->id)>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit">Save</button>
+            </form>
+        @endif
 
         <hr>
 
@@ -34,6 +73,7 @@
                     <th>ID</th>
                     <th>Name</th>
                     <th>Price</th>
+                    <th>Category</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -44,6 +84,7 @@
                         <td>{{ $item->id }}</td>
                         <td>{{ $item->name }}</td>
                         <td>{{ $item->price }}</td>
+                        <td>{{ $item->category?->name ?? 'N/A' }}</td>
                         <td>
                             <div class="action-buttons">
                                 <a href="/products/{{ $item->id }}/edit" class="btn-edit">Edit</a>
